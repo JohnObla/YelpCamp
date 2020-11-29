@@ -1,0 +1,12 @@
+{
+    "name": "yelp-camp",
+    "version": "1.0.0",
+    "main": "index.js",
+    "author": "John Obla <john-obla@live.co.uk>",
+    "license": "MIT",
+    "dependencies": {
+        "express": "^4.17.1",
+        "mongoose": "^5.10.18",
+        "mustache-express": "^1.3.0"
+    }
+}
