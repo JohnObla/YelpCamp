@@ -1,21 +1,7 @@
-<!DOCTYPE html>
-<html lang="en">
+<% layout("layouts/boilerplate") %>
+<h1><%=title%></h1>
+<h2><%=location%></h2>
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><%=title%></title>
-</head>
-
-<body>
-    <h1><%=title%></h1>
-    <h2><%=location%></h2>
-
-    <a href="/campgrounds">All Campgrounds</a> |
-    <a href="/campgrounds/<%=id%>/edit">Edit Campground</a> |
-    <a href="/campgrounds/<%=id%>/delete">Delete Campground</a> |
-
-
-</body>
-
-</html>
+<a href="/campgrounds">All Campgrounds</a> |
+<a href="/campgrounds/<%=id%>/edit">Edit Campground</a> |
+<a href="/campgrounds/<%=id%>/delete">Delete Campground</a> |
