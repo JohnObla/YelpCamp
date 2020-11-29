@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 const path = require('path');
 const Campground = require("./models/campground");
 const methodOverride = require('method-override');
+const { findByIdAndDelete } = require("./models/campground");
 
 
 mongoose.connect('mongodb://localhost:27017/yelpCamp', {
@@ -67,6 +68,20 @@ app.put('/campgrounds/:id', async (req, res) => {
     const campground = await Campground.findByIdAndUpdate(id, req.body.campgrounds, { runValidators: true });
 
     res.redirect(`/campgrounds/${id}`);
+});
+
+app.get('/campgrounds/:id/delete', async (req, res) => {
+    const { id } = req.params;
+    const campground = await Campground.findById(id);
+
+    res.render('campgrounds/delete', campground);
+});
+
+app.delete('/campgrounds/:id', async (req, res) => {
+    const { id } = req.params;
+    await Campground.findByIdAndDelete(id);
+
+    res.redirect('/campgrounds')
 });
 
 app.listen('3000', () => {
