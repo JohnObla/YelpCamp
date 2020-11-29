@@ -12,9 +12,9 @@
     <a href="/campgrounds/new">New Campground</a>
 
     <ul>
-        {{#campgrounds}}
-        <li><a href="/campgrounds/{{id}}">{{title}}</a> </li>
-        {{/campgrounds}}
+        <%for (const camp of campgrounds) {%>
+        <li><a href="/campgrounds/<%=camp.id%>"><%=camp.title%></a></li>
+        <%}%>
     </ul>
 </body>
 

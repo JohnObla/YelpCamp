@@ -1,10 +1,8 @@
 const express = require("express");
-const mustacheExpress = require("mustache-express");
 const mongoose = require('mongoose');
 const path = require('path');
 const Campground = require("./models/campground");
 const methodOverride = require('method-override');
-const { findByIdAndDelete } = require("./models/campground");
 
 
 mongoose.connect('mongodb://localhost:27017/yelpCamp', {
@@ -20,10 +18,7 @@ db.once("open", () => {
 });
 
 const app = express();
-
-app.engine('html', mustacheExpress());
-app.set('view engine', 'html');
-
+app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, "views"));
 
 app.use(express.urlencoded({ extended: true }));
@@ -65,7 +60,7 @@ app.get('/campgrounds/:id/edit', async (req, res) => {
 
 app.put('/campgrounds/:id', async (req, res) => {
     const { id } = req.params;
-    const campground = await Campground.findByIdAndUpdate(id, req.body.campgrounds, { runValidators: true });
+    await Campground.findByIdAndUpdate(id, req.body.campground, { runValidators: true, useFindAndModify: false });
 
     res.redirect(`/campgrounds/${id}`);
 });

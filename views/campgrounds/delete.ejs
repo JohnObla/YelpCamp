@@ -9,11 +9,11 @@
 
 <body>
     <h1>Delete Campground</h1>
-    <form action="/campgrounds/{{id}}?_method=DELETE" method="post">
+    <form action="/campgrounds/<%=id%>?_method=DELETE" method="post">
         <div>Are you sure you want to delete?</div>
         <button>Submit</button>
     </form>
-    <a href="/campgrounds/{{id}}">Back to Campground</a>
+    <a href="/campgrounds/<%=id%>">Back to Campground</a>
 
 </body>
 
