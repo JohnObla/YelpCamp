@@ -1,10 +1,24 @@
 const express = require("express");
 const mustacheExpress = require("mustache-express");
-const app = express();
+const mongoose = require('mongoose');
 const path = require('path');
 
+mongoose.connect('mongodb://localhost:27017/yelpCamp', {
+    useNewUrlParser: true,
+    useCreateIndex: true,
+    useUnifiedTopology: true
+});
+
+const db = mongoose.connection;
+db.on("error", console.error.bind(console, "connection error:"));
+db.once("open", () => {
+    console.log("Database connected");
+});
+
+const app = express();
+
 app.engine('html', mustacheExpress());
-app.set('view engine', 'html')
+app.set('view engine', 'html');
 
 app.set('views', path.join(__dirname, "views"));
 
@@ -14,4 +28,4 @@ app.get('/', (req, res) => {
 
 app.listen('3000', () => {
     console.log("Serving on port 3000");
-})
+});
