@@ -1,16 +1,41 @@
 <% layout('layouts/boilerplate') %>
 
-<form action="/campgrounds" method="post">
-    <div>
-        <label for="title">Title</label>
-        <input type="text" name="campground[title]" id="title">
+<div class="row">
+    <h1 class="text-center">New Campground</h1>
+    <div class="col-6 offset-3">
+        <form action="/campgrounds" method="post">
+            <div class="mb-3">
+                <label for="title" class="form-label">Title</label>
+                <input type="text" class="form-control" name="campground[title]" id="title">
+            </div>
+            <div class="mb-3">
+                <label for="location" class="form-label">Location</label>
+                <input type="text" class="form-control" name="campground[location]" id="location">
+            </div>
+            <div class="mb-3">
+                <label for="image" class="form-label">Image Url</label>
+                <input type="text" class="form-control" name="campground[image]" id="image">
+            </div>
+            <div class="mb-3">
+                <label for="price" class="form-label">Price</label>
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="price-label">£</span>
+                    </div>
+                    <input type="number" class="form-control" min="0" id="price" name="campground[price]" step=".01"
+                        placeholder="0.00" aria-label="Price" aria-describedby="price-label">
+                </div>
+            </div>
+            <div class="mb-3">
+                <label for="description" class="form-label">Description</label>
+                <textarea class="form-control" name="campground[description]" id="description"></textarea>
+            </div>
+            <div class="mb-3">
+                <button class="btn btn-success">Add Campground</button>
+            </div>
+        </form>
+        <div>
+            <a href="/campgrounds">All Campgrounds</a>
+        </div>
     </div>
-    <div>
-        <label for="location">Location</label>
-        <input type="text" name="campground[location]" id="location">
-    </div>
-    <button>Add Campground</button>
-</form>
-<div>
-    <a href="/campgrounds">All Campgrounds</a>
 </div>
