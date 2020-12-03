@@ -1,8 +1,16 @@
 <% layout('layouts/boilerplate') %>
 
-<h1>Delete Campground</h1>
-<form action="/campgrounds/<%=id%>?_method=DELETE" method="post">
-    <div>Are you sure you want to delete?</div>
-    <button>Submit</button>
-</form>
-<a href="/campgrounds/<%=id%>">Back to Campground</a>
+<div class="row">
+    <h1 class="text-center mb-3">Delete Campground</h1>
+    <div class="col-6 offset-3 mt-3">
+        <form action="/campgrounds/<%=id%>?_method=DELETE" method="post">
+            <div class="mb-3">
+                <div class="mb-3">Are you sure you want to delete?</div>
+                <button type="submit" class="btn btn-danger text-light">
+                    Delete
+                </button>
+                <a class="btn btn-secondary" href="/campgrounds/<%=id%>">Back to Campground</a>
+            </div>
+        </form>
+    </div>
+</div>
