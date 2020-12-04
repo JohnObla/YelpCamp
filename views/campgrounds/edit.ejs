@@ -3,18 +3,28 @@
 <div class="row">
     <h1 class="text-center">Edit Campground</h1>
     <div class="col-6 offset-3">
-        <form action="/campgrounds/<%=id%>?_method=PUT" method="post">
+        <form action="/campgrounds/<%=id%>?_method=PUT" method="post" novalidate class="validated-form">
             <div class="mb-3">
                 <label for="title" class="form-label">Title</label>
-                <input type="text" class="form-control" name="campground[title]" id="title" value="<%=title%>">
+                <input type="text" class="form-control" name="campground[title]" id="title" value="<%=title%>" required>
+                <div class="valid-feedback">
+                    Looks good!
+                </div>
             </div>
             <div class="mb-3">
                 <label for="location" class="form-label">Location</label>
-                <input type="text" class="form-control" name="campground[location]" id="location" value="<%=location%>">
+                <input type="text" class="form-control" name="campground[location]" id="location" value="<%=location%>"
+                    required>
+                <div class="valid-feedback">
+                    Looks good!
+                </div>
             </div>
             <div class="mb-3">
                 <label for="image" class="form-label">Image Url</label>
-                <input type="text" class="form-control" name="campground[image]" id="image" value="<%=image%>">
+                <input type="text" class="form-control" name="campground[image]" id="image" value="<%=image%>" required>
+                <div class="valid-feedback">
+                    Looks good!
+                </div>
             </div>
             <div class="mb-3">
                 <label for="price" class="form-label">Price</label>
@@ -23,13 +33,20 @@
                         <span class="input-group-text" id="price-label">£</span>
                     </div>
                     <input type="number" class="form-control" min="0" id="price" name="campground[price]" step=".01"
-                        placeholder="0.00" aria-label="Price" aria-describedby="price-label" value="<%=price%>">
+                        placeholder="0.00" aria-label="Price" aria-describedby="price-label" value="<%=price%>"
+                        required>
+                    <div class="valid-feedback">
+                        Looks good!
+                    </div>
                 </div>
             </div>
             <div class="mb-3">
                 <label for="description" class="form-label">Description</label>
-                <textarea class="form-control" name="campground[description]" id="description"
-                    rows="6"><%=description%></textarea>
+                <textarea class="form-control" name="campground[description]" id="description" rows="6"
+                    required><%=description%></textarea>
+                <div class="valid-feedback">
+                    Looks good!
+                </div>
             </div>
             <div class="mb-3">
                 <button type="submit" class="btn btn-warning">Update Campground
