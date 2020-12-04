@@ -6,7 +6,7 @@ const path = require('path');
 const morgan = require("morgan");
 const Campground = require("./models/campground");
 const catchAsync = require("./utils/catchAsync");
-
+const ExpressError = require("./utils/ExpressError");
 
 mongoose.connect('mongodb://localhost:27017/yelpCamp', {
     useNewUrlParser: true,
@@ -92,7 +92,13 @@ app.delete('/campgrounds/:id', async (req, res) => {
     res.redirect('/campgrounds')
 });
 
+app.all("*", (req, res, next) => {
+    return next(new ExpressError("Page Not Found", 404))
+});
+
 app.use((err, req, res, next) => {
+    const { statusCode = 500, message = "Something went wrong" } = err;
+    res.status(statusCode).send(message);
     res.send("Oh boy, something went wrong!");
 })
 
