@@ -36,10 +36,10 @@ app.get('/', (req, res) => {
     res.render('home');
 });
 
-app.get('/campgrounds', async (req, res) => {
+app.get('/campgrounds', catchAsync(async (req, res) => {
     const campgrounds = await Campground.find({});
     res.render('campgrounds/index', { campgrounds });
-});
+}));
 
 app.get('/campgrounds/new', (req, res) => {
     res.render('campgrounds/new');
@@ -52,19 +52,19 @@ app.post('/campgrounds', catchAsync(async (req, res, next) => {
     res.redirect(`campgrounds/${campground.id}`);
 }));
 
-app.get('/campgrounds/:id', async (req, res) => {
+app.get('/campgrounds/:id', catchAsync(async (req, res) => {
     const { id } = req.params;
     const campground = await Campground.findById(id);
 
     res.render('campgrounds/details', campground);
-});
+}));
 
-app.get('/campgrounds/:id/edit', async (req, res) => {
+app.get('/campgrounds/:id/edit', catchAsync(async (req, res) => {
     const { id } = req.params;
     const campground = await Campground.findById(id);
 
     res.render('campgrounds/edit', campground);
-});
+}));
 
 app.put('/campgrounds/:id', catchAsync(async (req, res, next) => {
     try {
@@ -78,19 +78,19 @@ app.put('/campgrounds/:id', catchAsync(async (req, res, next) => {
 
 }));
 
-app.get('/campgrounds/:id/delete', async (req, res) => {
+app.get('/campgrounds/:id/delete', catchAsync(async (req, res) => {
     const { id } = req.params;
     const campground = await Campground.findById(id);
 
     res.render('campgrounds/delete', campground);
-});
+}));
 
-app.delete('/campgrounds/:id', async (req, res) => {
+app.delete('/campgrounds/:id', catchAsync(async (req, res) => {
     const { id } = req.params;
     await Campground.findByIdAndDelete(id);
 
     res.redirect('/campgrounds')
-});
+}));
 
 app.all("*", (req, res, next) => {
     return next(new ExpressError("Page Not Found", 404))
