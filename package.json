@@ -11,6 +11,9 @@
         "mongoose": "^5.10.18",
         "morgan": "^1.10.0"
     },
+    "scripts": {
+        "devstart": "nodemon app.js"
+    },
     "nodemonConfig": {
         "ext": "js, mjs, json, css, ejs"
     }
