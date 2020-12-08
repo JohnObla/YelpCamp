@@ -52,11 +52,20 @@ app.post('/campgrounds', catchAsync(async (req, res, next) => {
     const campgroundSchema = Joi.object({
         campground: Joi.object({
             title: Joi.string().required(),
-            price: Joi.number().required().min(0)
+            price: Joi.number().required().min(0),
+            image: Joi.string().required(),
+            location: Joi.string().required(),
+            description: Joi.string().required()
         }).required()
     });
-    const result = campgroundSchema.validate(req.body);
-    if (result.error) throw new ExpressError(result.error, 400);
+    const { error } = campgroundSchema.validate(req.body);
+
+    if (error) {
+        const msg = error.details.map(el => el.message).join(',');
+        throw new ExpressError(msg, 400)
+    }
+
+    // if (result.error) throw new ExpressError(result.error, 400);
 
     const campground = new Campground(req.body.campground);
     await campground.save();
