@@ -7,6 +7,7 @@ const morgan = require("morgan");
 const Joi = require("joi");
 
 const Campground = require("./models/campground");
+const Review = require("./models/review");
 const catchAsync = require("./utils/catchAsync");
 const ExpressError = require("./utils/ExpressError");
 const { campgroundSchema } = require("./schemas");
@@ -105,6 +106,18 @@ app.delete('/campgrounds/:id', catchAsync(async (req, res) => {
     await Campground.findByIdAndDelete(id);
 
     res.redirect('/campgrounds')
+}));
+
+app.post('/campgrounds/:id/reviews', catchAsync(async (req, res) => {
+    const { id } = req.params;
+    const review = new Review(req.body.review)
+
+    const campground = await Campground.findById(id);
+    campground.reviews.push(review);
+
+    await Promise.all([review.save(), campground.save()]);
+
+    res.redirect(`/campgrounds/${campground._id}`);
 }));
 
 app.all("*", (req, res, next) => {
