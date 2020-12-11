@@ -1,128 +1,66 @@
 const express = require("express");
-const mongoose = require('mongoose');
-const methodOverride = require('method-override');
+const mongoose = require("mongoose");
+const methodOverride = require("method-override");
 const ejsMate = require("ejs-mate");
-const path = require('path');
+const path = require("path");
 const morgan = require("morgan");
-const Joi = require("joi");
 
-const Campground = require("./models/campground");
 const Review = require("./models/review");
 const catchAsync = require("./utils/catchAsync");
 const ExpressError = require("./utils/ExpressError");
-const { campgroundSchema, reviewSchema } = require("./schemas");
+const Campground = require("./models/campground");
 
-mongoose.connect('mongodb://localhost:27017/yelpCamp', {
-    useNewUrlParser: true,
-    useCreateIndex: true,
-    useUnifiedTopology: true
+const { reviewSchema } = require("./schemas");
+
+const campgrounds = require("./routes/campgrounds");
+
+mongoose.connect("mongodb://localhost:27017/yelpCamp", {
+  useNewUrlParser: true,
+  useCreateIndex: true,
+  useUnifiedTopology: true,
 });
 
 const db = mongoose.connection;
 db.on("error", console.error.bind(console, "connection error:"));
 db.once("open", () => {
-    console.log("Database connected");
+  console.log("Database connected");
 });
 
 const app = express();
 
 app.engine("ejs", ejsMate);
 
-app.set('view engine', 'ejs');
-app.set('views', path.join(__dirname, "views"));
+app.set("view engine", "ejs");
+app.set("views", path.join(__dirname, "views"));
 
 app.use(express.urlencoded({ extended: true }));
-app.use(methodOverride('_method'));
+app.use(methodOverride("_method"));
 
 app.use(morgan("dev"));
 
-const validateCampground = (req, res, next) => {
-
-    const { error } = campgroundSchema.validate(req.body);
-
-    if (error) {
-        const msg = error.details.map(el => el.message).join(',');
-        throw new ExpressError(msg, 400)
-    } else {
-        next();
-    }
-}
-
 const validateReview = (req, res, next) => {
-    const { error } = reviewSchema.validate(req.body);
+  const { error } = reviewSchema.validate(req.body);
 
-    if (error) {
-        const msg = error.details.map(el => el.message).join(',');
-        throw new ExpressError(msg, 400)
-    } else {
-        next();
-    }
-}
+  if (error) {
+    const msg = error.details.map((el) => el.message).join(",");
+    throw new ExpressError(msg, 400);
+  } else {
+    next();
+  }
+};
 
-app.get('/', (req, res) => {
-    res.render('home');
+app.get("/", (req, res) => {
+  res.render("home");
 });
 
-app.get('/campgrounds', catchAsync(async (req, res) => {
-    const campgrounds = await Campground.find({});
-    res.render('campgrounds/index', { campgrounds });
-}));
+app.use("/campgrounds", campgrounds);
 
-app.get('/campgrounds/new', (req, res) => {
-    res.render('campgrounds/new');
-});
-
-app.post('/campgrounds', validateCampground, catchAsync(async (req, res, next) => {
-    const campground = new Campground(req.body.campground);
-    await campground.save();
-
-    res.redirect(`campgrounds/${campground.id}`);
-}));
-
-app.get('/campgrounds/:id', catchAsync(async (req, res) => {
+app.post(
+  "/campgrounds/:id/reviews",
+  validateReview,
+  catchAsync(async (req, res) => {
     const { id } = req.params;
-    const campground = await Campground.findById(id).populate("reviews");
-    console.log(campground.reviews);
-
-    res.render('campgrounds/details', campground);
-}));
-
-app.get('/campgrounds/:id/edit', catchAsync(async (req, res) => {
-    const { id } = req.params;
-    const campground = await Campground.findById(id);
-
-    res.render('campgrounds/edit', campground);
-}));
-
-app.put('/campgrounds/:id', validateCampground, catchAsync(async (req, res, next) => {
-    try {
-        const { id } = req.params;
-        await Campground.findByIdAndUpdate(id, req.body.campground, { runValidators: true, useFindAndModify: false });
-
-        res.redirect(`/campgrounds/${id}`);
-    } catch (error) {
-        next(error);
-    }
-
-}));
-
-app.get('/campgrounds/:id/delete', catchAsync(async (req, res) => {
-    const { id } = req.params;
-    const campground = await Campground.findById(id);
-
-    res.render('campgrounds/delete', campground);
-}));
-
-app.delete('/campgrounds/:id', catchAsync(async (req, res) => {
-    const { id } = req.params;
-    await Campground.findByIdAndDelete(id);
-
-    res.redirect('/campgrounds')
-}));
-
-app.post('/campgrounds/:id/reviews', validateReview, catchAsync(async (req, res) => {
-    const { id } = req.params;
-    const review = new Review(req.body.review)
+    const review = new Review(req.body.review);
 
     const campground = await Campground.findById(id);
     campground.reviews.push(review);
@@ -130,29 +68,33 @@ app.post('/campgrounds/:id/reviews', validateReview, catchAsync(async (req, res)
     await Promise.all([review.save(), campground.save()]);
 
     res.redirect(`/campgrounds/${campground._id}`);
-}));
+  })
+);
 
-app.delete('/campgrounds/:id/reviews/:reviewId', catchAsync(async (req, res) => {
+app.delete(
+  "/campgrounds/:id/reviews/:reviewId",
+  catchAsync(async (req, res) => {
     const { id, reviewId } = req.params;
 
     await Promise.all([
-        Campground.findByIdAndUpdate(id, { $pull: { reviews: reviewId } }),
-        Review.findByIdAndDelete(reviewId)
+      Campground.findByIdAndUpdate(id, { $pull: { reviews: reviewId } }),
+      Review.findByIdAndDelete(reviewId),
     ]);
 
     res.redirect(`/campgrounds/${id}`);
-}));
+  })
+);
 
 app.all("*", (req, res, next) => {
-    return next(new ExpressError("Page Not Found", 404))
+  return next(new ExpressError("Page Not Found", 404));
 });
 
 app.use((err, req, res, next) => {
-    const { statusCode = 500 } = err;
-    if (!err.message) err.message = "Oh No, Something Went Wrong!";
-    res.status(statusCode).render("error", { err });
+  const { statusCode = 500 } = err;
+  if (!err.message) err.message = "Oh No, Something Went Wrong!";
+  res.status(statusCode).render("error", { err });
 });
 
-app.listen('3000', () => {
-    console.log("Serving on port 3000");
+app.listen("3000", () => {
+  console.log("Serving on port 3000");
 });
