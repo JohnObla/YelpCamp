@@ -4,7 +4,6 @@ const router = express.Router({ mergeParams: true });
 const Campground = require("../models/campground");
 const Review = require("../models/review");
 const catchAsync = require("../utils/catchAsync");
-const ExpressError = require("../utils/ExpressError");
 
 const { validateReview } = require("../schemas");
 

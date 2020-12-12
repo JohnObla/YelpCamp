@@ -5,7 +5,6 @@ const Campground = require("../models/campground");
 const { validateCampground } = require("../schemas");
 
 const catchAsync = require("../utils/catchAsync");
-const ExpressError = require("../utils/ExpressError");
 
 router.get(
   "/",
