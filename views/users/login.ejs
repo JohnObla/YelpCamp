@@ -1,0 +1,10 @@
+<% layout("layouts/boilerplate") %>  
+
+<h1>Login</h1>
+
+<form class="validated-form" action="/login" method="post" novalidate>
+
+    <%- include("../partials/userpass") %> 
+    
+    <button class="btn btn-success">Login</button>
+</form>
