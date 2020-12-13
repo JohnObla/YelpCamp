@@ -55,17 +55,15 @@ router.put(
   "/:id",
   validateCampground,
   catchAsync(async (req, res, next) => {
-    try {
-      const { id } = req.params;
-      await Campground.findByIdAndUpdate(id, req.body.campground, {
-        runValidators: true,
-        useFindAndModify: false,
-      });
+    const { id } = req.params;
+    await Campground.findByIdAndUpdate(id, req.body.campground, {
+      runValidators: true,
+      useFindAndModify: false,
+    });
 
-      res.redirect(`/campgrounds/${id}`);
-    } catch (error) {
-      next(error);
-    }
+    req.flash("success", "Successfully updated campground!");
+
+    res.redirect(`/campgrounds/${id}`);
   })
 );
 
@@ -85,6 +83,7 @@ router.delete(
     const { id } = req.params;
     await Campground.findByIdAndDelete(id);
 
+    req.flash("success", "Successfully deleted campground!");
     res.redirect("/campgrounds");
   })
 );
