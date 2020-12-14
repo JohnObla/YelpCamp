@@ -21,7 +21,7 @@
         "devstart": "nodemon app.js"
     },
     "nodemonConfig": {
-        "ext": "js, mjs, json, css, ejs"
+        "ext": "js, mjs, json"
     },
     "devDependencies": {
         "eslint": "^7.15.0",
