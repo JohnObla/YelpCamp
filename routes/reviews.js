@@ -5,14 +5,20 @@ const Campground = require("../models/campground");
 const Review = require("../models/review");
 const catchAsync = require("../utils/catchAsync");
 
+const { isLoggedIn, isAuthor } = require("../middleware");
+
 const { validateReview } = require("../schemas");
 
 router.post(
   "/",
+  isLoggedIn,
   validateReview,
   catchAsync(async (req, res) => {
     const { id } = req.params;
-    const review = new Review(req.body.review);
+
+    const reviewBody = req.body.review;
+    reviewBody.author = req.user;
+    const review = new Review(reviewBody);
 
     const campground = await Campground.findById(id);
     campground.reviews.push(review);
@@ -26,6 +32,7 @@ router.post(
 
 router.delete(
   "/:reviewId",
+  isLoggedIn,
   catchAsync(async (req, res) => {
     const { id, reviewId } = req.params;
 
