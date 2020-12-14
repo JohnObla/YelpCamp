@@ -12,9 +12,14 @@
                 <a class="nav-link" href="/campgrounds/new">New Campground</a>
             </div>
             <div class="navbar-nav ml-auto">
+            <% if (!currentUser) { %>
                 <a class="nav-link" href="/register">Signup</a>
                 <a class="nav-link" href="/login">Login</a>
-                <a class="nav-link" href="/Logout">Logout</a>
+            <% } else { %>
+                <form class=".col-auto form-inline" action="/logout" method="post">
+                    <button class="btn btn-link nav-link">Logout</button>
+                </form>
+            <% }  %>
             </div>
         </div>
     </div>
