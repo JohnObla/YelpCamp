@@ -3,7 +3,7 @@ const router = express.Router();
 
 const Campground = require("../models/campground");
 const { validateCampground } = require("../schemas");
-const { isLoggedIn } = require("../middleware");
+const { isLoggedIn, isAuthor } = require("../middleware");
 
 const catchAsync = require("../utils/catchAsync");
 
@@ -58,6 +58,7 @@ router.get(
 router.get(
   "/:id/edit",
   isLoggedIn,
+  isAuthor,
   catchAsync(async (req, res) => {
     const { id } = req.params;
     const campground = await Campground.findById(id);
@@ -69,16 +70,17 @@ router.get(
 router.put(
   "/:id",
   isLoggedIn,
+  isAuthor,
   validateCampground,
   catchAsync(async (req, res, next) => {
     const { id } = req.params;
+
     await Campground.findByIdAndUpdate(id, req.body.campground, {
       runValidators: true,
       useFindAndModify: false,
     });
 
     req.flash("success", "Successfully updated campground!");
-
     res.redirect(`/campgrounds/${id}`);
   })
 );
@@ -86,6 +88,7 @@ router.put(
 router.get(
   "/:id/delete",
   isLoggedIn,
+  isAuthor,
   catchAsync(async (req, res) => {
     const { id } = req.params;
     const campground = await Campground.findById(id);
@@ -97,6 +100,7 @@ router.get(
 router.delete(
   "/:id",
   isLoggedIn,
+  isAuthor,
   catchAsync(async (req, res) => {
     const { id } = req.params;
     await Campground.findByIdAndDelete(id);
