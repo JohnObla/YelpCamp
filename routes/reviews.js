@@ -5,7 +5,7 @@ const Campground = require("../models/campground");
 const Review = require("../models/review");
 const catchAsync = require("../utils/catchAsync");
 
-const { isLoggedIn, isAuthor } = require("../middleware");
+const { isLoggedIn, isReviewAuthor } = require("../middleware");
 
 const { validateReview } = require("../schemas");
 
@@ -33,6 +33,7 @@ router.post(
 router.delete(
   "/:reviewId",
   isLoggedIn,
+  isReviewAuthor,
   catchAsync(async (req, res) => {
     const { id, reviewId } = req.params;
 
