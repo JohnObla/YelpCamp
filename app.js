@@ -10,6 +10,7 @@ const ejsMate = require("ejs-mate");
 const path = require("path");
 const morgan = require("morgan");
 const session = require("express-session");
+const MongoStore = require("connect-mongo")(session);
 const flash = require("connect-flash");
 const passport = require("passport");
 const LocalStrategy = require("passport-local");
@@ -28,7 +29,9 @@ const User = require("./models/user");
 const ExpressError = require("./utils/ExpressError");
 
 // Database setup
-mongoose.connect("mongodb://localhost:27017/yelpCamp", {
+// const dbUrl = process.env.DB_URL;
+const dbUrl = "mongodb://localhost:27017/yelpCamp";
+mongoose.connect(dbUrl, {
   useNewUrlParser: true,
   useCreateIndex: true,
   useUnifiedTopology: true,
@@ -56,7 +59,21 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride("_method"));
 app.use(morgan("dev"));
+app.use(flash());
+app.use(mongoSanitize());
+
+// Session
+const store = new MongoStore({
+  url: dbUrl,
+  secret: "thisshouldbeabettersecret!",
+  touchAfter: 24 * 60 * 60,
+});
+store.on("error", function (err) {
+  console.log("SESSION STORE ERROR", err);
+});
+
 const sessionConfig = {
+  store,
   name: "session",
   secret: "thisshouldbeabettersecret!",
   resave: false,
@@ -69,8 +86,6 @@ const sessionConfig = {
   },
 };
 app.use(session(sessionConfig));
-app.use(flash());
-app.use(mongoSanitize());
 
 // Passport
 app.use(passport.initialize());
