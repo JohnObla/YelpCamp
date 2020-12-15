@@ -28,9 +28,11 @@ const User = require("./models/user");
 // Custom Error
 const ExpressError = require("./utils/ExpressError");
 
+// Secret
+const secret = process.env.SECRET || "thisshouldbeabettersecret!";
+
 // Database setup
-// const dbUrl = process.env.DB_URL;
-const dbUrl = "mongodb://localhost:27017/yelpCamp";
+const dbUrl = process.env.DB_URL || "mongodb://localhost:27017/yelpCamp";
 mongoose.connect(dbUrl, {
   useNewUrlParser: true,
   useCreateIndex: true,
@@ -65,7 +67,7 @@ app.use(mongoSanitize());
 // Session
 const store = new MongoStore({
   url: dbUrl,
-  secret: "thisshouldbeabettersecret!",
+  secret,
   touchAfter: 24 * 60 * 60,
 });
 store.on("error", function (err) {
@@ -75,7 +77,7 @@ store.on("error", function (err) {
 const sessionConfig = {
   store,
   name: "session",
-  secret: "thisshouldbeabettersecret!",
+  secret,
   resave: false,
   saveUninitialized: true,
   cookie: {
