@@ -22,7 +22,8 @@
         "passport-local-mongoose": "^6.0.1"
     },
     "scripts": {
-        "devstart": "nodemon app.js"
+        "devstart": "nodemon app.js",
+        "start": "node app.js"
     },
     "nodemonConfig": {
         "ext": "js, mjs, json"
