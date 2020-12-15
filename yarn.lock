@@ -621,6 +621,11 @@ etag@~1.8.1:
   resolved "https://registry.yarnpkg.com/etag/-/etag-1.8.1.tgz#41ae2eeb65efa62268aebfea83ac7d79299b0887"
   integrity sha1-Qa4u62XvpiJorr/qg6x9eSmbCIc=
 
+express-mongo-sanitize@^2.0.1:
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/express-mongo-sanitize/-/express-mongo-sanitize-2.0.1.tgz#18c9de723b747834f86e6077d164ef16f8d5c5b6"
+  integrity sha512-aeI5s31m5HlR9SedUlhXVuWwm3alVxcyVr2cUq6jFr/0FcCr5Vz5qItEcrtVz5YUdS5HvOAUG8hF6eRGgbQQ9w==
+
 express-session@^1.17.1:
   version "1.17.1"
   resolved "https://registry.yarnpkg.com/express-session/-/express-session-1.17.1.tgz#36ecbc7034566d38c8509885c044d461c11bf357"

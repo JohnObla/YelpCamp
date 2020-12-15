@@ -9,6 +9,7 @@ const session = require("express-session");
 const flash = require("connect-flash");
 const passport = require("passport");
 const LocalStrategy = require("passport-local");
+const mongoSanitize = require("express-mongo-sanitize");
 
 // Custom routes
 const campgroundRoutes = require("./routes/campgrounds");
@@ -62,6 +63,7 @@ const sessionConfig = {
 };
 app.use(session(sessionConfig));
 app.use(flash());
+app.use(mongoSanitize());
 
 // Passport
 app.use(passport.initialize());
